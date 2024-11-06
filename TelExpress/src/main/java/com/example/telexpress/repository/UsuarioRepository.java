@@ -18,6 +18,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     long countByEstadoUsuario(String estadoUsuario);
     long countByZona(Zona zona);
     long countByZonaAndEstadoUsuario(Zona zona, String estadoUsuario);
+    public Usuario findById(Integer id);
 
 
     List<Usuario> findByZonaIdzonaAndRolId(Integer idzona, Integer rolId);

@@ -32,14 +32,14 @@ public class ChatRoomService {
                 // Añadir el cliente y el agente al room
                 roomUsers.putIfAbsent(roomId, new HashSet<>());
                 roomUsers.get(roomId).add(usuario.getNombre());
-                roomUsers.get(roomId).add(getAgenteName(usuario.getIdSuperior()));
+                roomUsers.get(roomId).add(usuario.getIdSuperior());
             }
         }
     }
 
-    private String getAgenteName(Usuario id) {
+    private String getAgenteName(Integer id) {
         // Este método debería obtener el nombre del agente basado en su ID
-        Usuario agente = usuarioRepository.findById(Long.parseLong(String.valueOf(id))).orElse(null);
+        Usuario agente = usuarioRepository.findById(id);
         return agente != null ? agente.getNombre() : "Agente Desconocido";
     }
     public void markRoomAsActive(String room) {
