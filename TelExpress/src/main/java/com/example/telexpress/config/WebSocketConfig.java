@@ -1,24 +1,31 @@
+// Ubicación: /src/main/java/com/example/chatapp/config/WebSocketConfig.java
+
 package com.example.telexpress.config;
 
 
-import com.example.telexpress.dto.ChatHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-
-import java.net.http.WebSocket;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
-@EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Autowired
-    private ChatHandler chatHandler;
+    // Configuración del broker de mensajes
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry){
-        registry.addHandler(new ChatHandler()," /chatSocket");
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        // Se habilita el broker en memoria con los prefijos '/topic' para los mensajes dirigidos a todos
+        config.enableSimpleBroker("/topic");
+        // Definimos '/app' como el prefijo para las rutas de destino de los mensajes
+        config.setApplicationDestinationPrefixes("/app");
+    }
 
+    // Registro del punto final (endpoint) de WebSocket
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // Se registra el endpoint '/chat-websocket' para que los clientes puedan conectarse a este punto
+        registry.addEndpoint("/chat-websocket").withSockJS();
     }
 }

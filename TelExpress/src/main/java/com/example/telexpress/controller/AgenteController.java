@@ -7,6 +7,7 @@ import com.example.telexpress.entity.Ordenes;
 import com.example.telexpress.entity.Usuario;
 import com.example.telexpress.entity.Zona;
 import com.example.telexpress.repository.*;
+import com.example.telexpress.service.ChatRoomService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -16,16 +17,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.*;
 
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,10 +39,11 @@ public class AgenteController {
     final ProveedorRepository proveedorRepository;
     private final CoordinadorRepository coordinadorRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ChatRoomService chatRoomService;
 
     public AgenteController(OrdenesRepository ordenesRepository, UsuarioRepository usuarioRepository, AdminRepository adminRepository,
                             ZonaRepository zonaRepository, ProductoRepository productoRepository, ProveedorRepository proveedorRepository,
-                            ContrasenaAgenteRespository contrasenaAgenteRespository, UsuarioPerfilRepository usuarioPerfilRepository, CoordinadorRepository coordinadorRepository, PasswordEncoder passwordEncoder) {
+                            ContrasenaAgenteRespository contrasenaAgenteRespository, UsuarioPerfilRepository usuarioPerfilRepository, CoordinadorRepository coordinadorRepository, PasswordEncoder passwordEncoder, ChatRoomService chatRoomService) {
         this.ordenesRepository = ordenesRepository;
         this.usuarioRepository = usuarioRepository;
         this.adminRepository = adminRepository;
@@ -54,6 +54,7 @@ public class AgenteController {
         this.usuarioPerfilRepository = usuarioPerfilRepository;
         this.coordinadorRepository = coordinadorRepository;
         this.passwordEncoder = passwordEncoder;
+        this.chatRoomService = chatRoomService;
     }
 
     final ContrasenaAgenteRespository contrasenaAgenteRespository;
@@ -474,9 +475,11 @@ public class AgenteController {
 
 
     @GetMapping("/chat")
-    public String chat(Model model) {
-        model.addAttribute("paginaActual", "chat_agente");
-        return"Agente/chat_agente";
+    public ModelAndView getMonitorPage() {
+        ModelAndView modelAndView = new ModelAndView("Agente/chat_agente"); // o "monitor" si esa es la vista correcta
+        Set<String> activeRooms = chatRoomService.getActiveRooms();
+        modelAndView.addObject("activeRooms", activeRooms);
+        return modelAndView;
     }
 
 

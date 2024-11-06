@@ -64,6 +64,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findByEstadoUsuarioAndMotivoIsNotNull(String estadoUsuario);
 
+
+
     List<Usuario> findByZona_Idzona(Integer idzona);
 
    /* @Query(value = "SELECT contrasena from usuario where idroles =4 AND idusuario = 4",
@@ -116,4 +118,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             "AND o.estadoOrdenes IN ('CREADO', 'EN VALIDACION', 'EN PROCESO')", nativeQuery = true)
     void updateAgenteEncargadoByUsuario(
             @Param("usuarioId") Integer usuarioId);
+
+
 }
