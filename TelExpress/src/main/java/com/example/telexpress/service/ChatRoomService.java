@@ -16,12 +16,14 @@ public class ChatRoomService {
     private final Map<String, Set<String>> roomUsers = new HashMap<>();
     private final Set<String> activeRooms = new HashSet<>();
 
-    @Autowired
     private UsuarioRepository usuarioRepository; // Asegúrate de tener este repositorio
 
+
+
     @PostConstruct
-    public void initializeRooms() {
+    public void initializeRooms(UsuarioRepository usuarioRepositoryParam) {
         // Obtener todos los usuarios de la base de datos
+        usuarioRepository = usuarioRepositoryParam;
         List<Usuario> usuarios = usuarioRepository.findAll();
 
         for (Usuario usuario : usuarios) {
