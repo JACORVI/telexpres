@@ -26,19 +26,8 @@ public class ChatController {
     @SendTo("/topic/room/{room}")
     public Message sendMessage(@DestinationVariable String room, Message message, SimpMessageHeaderAccessor headerAccessor) {
         chatRoomService.markRoomAsActive(room);
+
+        // Devolver el mensaje si todo está bien
         return message;
-    }
-
-    @GetMapping("/join-chat")
-    public ModelAndView joinChat() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Usuario usuario = (Usuario) authentication.getPrincipal();
-
-        String room = "room_" + usuario.getIdSuperior();
-
-        ModelAndView modelAndView = new ModelAndView("chat");
-        modelAndView.addObject("room", room);
-        modelAndView.addObject("name", usuario.getNombre());
-        return modelAndView;
     }
 }

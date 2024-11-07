@@ -12,55 +12,74 @@ import java.util.*;
 
 @Service
 public class ChatRoomService {
+    private final Map<String, String> userRooms = new HashMap<>();
 
+    // Mapa que contiene los usuarios conectados por sala
     private final Map<String, Set<String>> roomUsers = new HashMap<>();
+
+    // Set para almacenar las salas activas (que ya recibieron mensajes)
     private final Set<String> activeRooms = new HashSet<>();
 
-    private UsuarioRepository usuarioRepository; // Asegúrate de tener este repositorio
-
-
-
-    @PostConstruct
-    public void initializeRooms(UsuarioRepository usuarioRepositoryParam) {
-        // Obtener todos los usuarios de la base de datos
-        usuarioRepository = usuarioRepositoryParam;
-        List<Usuario> usuarios = usuarioRepository.findAll();
-
-        for (Usuario usuario : usuarios) {
-            if (usuario.getIdSuperior() != null) {
-                String roomId = "chat" +" "+ usuario.getIdSuperior();
-                activeRooms.add(roomId);
-
-                // Añadir el cliente y el agente al room
-                roomUsers.putIfAbsent(roomId, new HashSet<>());
-                roomUsers.get(roomId).add(usuario.getNombre());
-                //roomUsers.get(roomId).add(usuario.getIdSuperior());
-            }
+    // Añadir usuario a una sala o redireccionar si ya existe
+    public String createOrJoinRoom(String userName) {
+        if (userRooms.containsKey(userName)) {
+            return userRooms.get(userName);
         }
+
+        String newRoom = "room_" + userName;
+        userRooms.put(userName, newRoom);
+        roomUsers.put(newRoom, new HashSet<>());
+        return newRoom;
     }
 
-    private String getAgenteName(Integer id) {
-        // Este método debería obtener el nombre del agente basado en su ID
-        Usuario agente = usuarioRepository.findById(id);
-        return agente != null ? agente.getNombre() : "Agente Desconocido";
+    // Obtener los usuarios en una sala específica
+    public Set<String> getUsersInRoom(String room) {
+        return roomUsers.getOrDefault(room, new HashSet<>());
     }
+
+    // Añadir un usuario a una sala (verificamos que no haya más de 2 usuarios)
+    public boolean addUserToRoom(String room, String user) {
+        Set<String> users = roomUsers.get(room);
+        if (users != null && users.size() < 2) {
+            return users.add(user);
+        }
+        return false;
+    }
+
+    // Obtener la sala de un usuario específico
+    public String getRoomForUser(String userName) {
+        return userRooms.get(userName);
+    }
+
+    public boolean roomExists(String roomName) {
+        return activeRooms.contains(roomName);
+    }
+
+    // Método para añadir una sala
+    public void addRoom(String roomName) {
+        activeRooms.add(roomName);
+    }
+
+    // Método para añadir al monitor (admin) a una sala
+    public void addAdminToRoom(String roomName) {
+        if (!roomExists(roomName)) {
+            addRoom(roomName); // Si no existe, crear la sala
+        }
+        System.out.println("Admin añadido a la sala: " + roomName);
+        // Aquí podrías añadir lógica adicional si necesitas que el admin tenga algún rol especial en la sala.
+    }
+    // Método para eliminar una sala (opcional si se quiere gestionar el cierre de salas)
+    public void removeRoom(String roomName) {
+        activeRooms.remove(roomName);
+    }
+
+    // Marcar la sala como activa (cuando se recibe un mensaje)
     public void markRoomAsActive(String room) {
         activeRooms.add(room);
     }
+
+    // Obtener las salas activas
     public Set<String> getActiveRooms() {
         return activeRooms;
-    }
-    public String createOrJoinRoom(String userName) {
-        // Lógica para crear o unirse a una sala de chat
-        String roomId = "room_" + userName;
-        // Aquí puedes agregar lógica para verificar si el room ya existe
-        return roomId;
-    }
-
-    public String createOrJoin(String userName) {
-        // Lógica para crear o unirse a una sala de chat
-        String roomId = "room_" + userName;
-        // Aquí puedes agregar lógica para verificar si el room ya existe
-        return roomId;
     }
 }

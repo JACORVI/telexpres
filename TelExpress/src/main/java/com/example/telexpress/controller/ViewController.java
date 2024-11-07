@@ -48,7 +48,7 @@ public class ViewController {
     @GetMapping("/join-chat")
     public ModelAndView joinChat(@RequestParam("name") String name) {
         // Crear o redirigir al usuario a su sala
-        String room = chatRoomService.createOrJoin(name);
+        String room = chatRoomService.createOrJoinRoom(name);
 
         // Redirigir al usuario a la sala asignada
         ModelAndView modelAndView = new ModelAndView("redirect:/chat");

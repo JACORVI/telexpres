@@ -10,7 +10,6 @@ import com.example.telexpress.repository.*;
 import com.example.telexpress.service.ChatRoomService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -20,12 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-
-
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/agente")
@@ -476,7 +470,7 @@ public class AgenteController {
 
     @GetMapping("/chat")
     public ModelAndView getMonitorPage() {
-        ModelAndView modelAndView = new ModelAndView("Agente/chat_agente"); // o "monitor" si esa es la vista correcta
+        ModelAndView modelAndView = new ModelAndView("monitor"); // o "monitor" si esa es la vista correcta
         Set<String> activeRooms = chatRoomService.getActiveRooms();
         modelAndView.addObject("activeRooms", activeRooms);
         return modelAndView;

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Chat</title>
+    <script>
+        function joinChat() {
+            var name = document.getElementById('name').value.trim();
+            if (name) {
+                window.location.href = '/join-chat?name=' + encodeURIComponent(name);
+            } else {
+                alert('Por favor, ingresa tu nombre antes de unirte al chat.');
+            }
+        }
+    </script>
+</head>
+<body>
+<h2>Unirse a un Chat</h2>
+
+<!-- Ingresar el nombre del usuario -->
+<div>
+    <label for="name">Tu nombre:</label>
+    <input type="text" id="name" placeholder="Tu nombre">
+</div>
+
+<!-- Botón para unirse al chat -->
+<button onclick="joinChat()">Unirse al Chat</button>
+</body>
+</html>

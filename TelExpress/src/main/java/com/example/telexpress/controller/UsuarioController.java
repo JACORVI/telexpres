@@ -88,7 +88,7 @@ public class UsuarioController {
 
         model.addAttribute("activePage", "chat");
 
-        return "Usuariofinal/chat";
+        return "home";
     }
 
     @GetMapping("/detalle_producto")
