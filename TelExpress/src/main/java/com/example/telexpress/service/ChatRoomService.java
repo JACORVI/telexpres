@@ -34,7 +34,7 @@ public class ChatRoomService {
                 // Añadir el cliente y el agente al room
                 roomUsers.putIfAbsent(roomId, new HashSet<>());
                 roomUsers.get(roomId).add(usuario.getNombre());
-                roomUsers.get(roomId).add(usuario.getIdSuperior());
+                //roomUsers.get(roomId).add(usuario.getIdSuperior());
             }
         }
     }
