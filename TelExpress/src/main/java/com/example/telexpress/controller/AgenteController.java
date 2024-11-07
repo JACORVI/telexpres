@@ -469,7 +469,8 @@ public class AgenteController {
 
 
     @GetMapping("/chat")
-    public ModelAndView getMonitorPage() {
+    public ModelAndView getMonitorPage(Model model) {
+        model.addAttribute("paginaActual", "chat");
         ModelAndView modelAndView = new ModelAndView("monitor"); // o "monitor" si esa es la vista correcta
         Set<String> activeRooms = chatRoomService.getActiveRooms();
         modelAndView.addObject("activeRooms", activeRooms);
