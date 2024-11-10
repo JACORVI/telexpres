@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.management.monitor.Monitor;
 import java.util.*;
 
 @Controller
@@ -467,15 +468,26 @@ public class AgenteController {
         }
     }
 
-
     @GetMapping("/chat")
     public ModelAndView getMonitorPage(Model model) {
         model.addAttribute("paginaActual", "chat");
-        ModelAndView modelAndView = new ModelAndView("monitor"); // o "monitor" si esa es la vista correcta
-        Set<String> activeRooms = chatRoomService.getActiveRooms();
-        modelAndView.addObject("activeRooms", activeRooms);
-        return modelAndView;
+        ModelAndView modelAndView = new ModelAndView("Agente/monitor"); // Crea un ModelAndView con la vista correcta
+        Set<String> activeRooms = chatRoomService.getActiveRooms(); // Obtiene las salas activas
+        modelAndView.addObject("activeRooms", activeRooms); // Agrega las salas activas al modelo
+        return modelAndView; // Devuelve el ModelAndView
     }
+
+    /*@GetMapping("/chat")
+    public ModelAndView getMonitorPage(Model model) {
+        model.addAttribute("paginaActual", "chat");
+        //ModelAndView modelAndView = new ModelAndView("Agente/monitor");
+        //modelAndView.addObject("paginaActual", "chat");
+        Set<String> activeRooms = chatRoomService.getActiveRooms();
+        //modelAndView.addObject("activeRooms", activeRooms);
+        //return modelAndView;
+        return "Agente/monitor";
+    }*/
+
 
 
 
