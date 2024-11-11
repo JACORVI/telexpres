@@ -9,6 +9,7 @@ import org.springframework.context.annotation.*;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.authorization.AuthenticatedAuthorizationManager.authenticated;
@@ -63,28 +64,25 @@ public class SecurityWeb {
                 .permitAll()
         );*/
         //http.formLogin();
-        http.formLogin(form -> form
+        http.csrf(AbstractHttpConfigurer::disable)
+                .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/procesologueo")
                 .usernameParameter("email")
                 .successHandler(authenticationSuccessHandler()) // Llama a un método separado
                 .permitAll()  // Usar el formulario de login por defecto de Spring Security
-        );
-        http.logout(logout -> logout
+        ).logout(logout -> logout
                 .logoutUrl("/logout")
                 //.logoutSuccessUrl("/login?logout")
                 .invalidateHttpSession(true)             // Invalida la sesión actual
                 .deleteCookies("JSESSIONID")             // Elimina la cookie de sesión JSESSIONID
                 .permitAll()  // Permitir a todos realizar logout
-        );
-
-        http.sessionManagement(session -> session
+        ).sessionManagement(session -> session
                 .maximumSessions(1)                      // Solo permite una sesión activa por usuario
                 .maxSessionsPreventsLogin(false)         // Si se intenta iniciar sesión nuevamente, invalida la sesión anterior
                 .expiredUrl("/login?expired")
-        );
-        http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers ("/agente","/agente/**").hasAuthority("Agente") //acceso solo para agentes
+        ).authorizeHttpRequests(authorize -> authorize
+                .requestMatchers ("/agente","/agente/**", "/api/**").hasAuthority("Agente") //acceso solo para agentes
                 .requestMatchers("/superadmin", "/superadmin/**", "/producto/**").hasAuthority("Superadmin")
                 .requestMatchers("/coordinador","/coordinador/**").hasAuthority("Coordinador")
                 .requestMatchers("/usuario","/usuario/**").hasAnyAuthority("Superadmin", "Usuario")
